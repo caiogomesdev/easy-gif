@@ -44,7 +44,7 @@ const App: React.FC = () => {
   function fileToUrlImage(file: File){
     if(!file?.type?.startsWith('image/')) return;
     var reader = new FileReader();
-    reader.onload = function(event: ProgressEvent<FileReader>){
+    reader.onloadend = function(event: ProgressEvent<FileReader>){
       const url = event.target?.result
         console.log(url);
     };
@@ -63,7 +63,7 @@ const App: React.FC = () => {
           }
           return isImage;
         }));
-        const file = item && await item.getType( image_type );
+        const file = await item?.getType( image_type );
         fileToUrlImage(file as File);
     }catch {}
   }

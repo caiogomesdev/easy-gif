@@ -11,31 +11,38 @@ const App: React.FC = () => {
 
   useEffect(()=> {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const size = 400
-    canvas.width = size;
-    canvas.height = size;
+    const width = 600;
+    const height = 400
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
     canvas.style.backgroundColor = `white`;
-    canvas.style.width = `${size}px`;
-    canvas.style.height = `${size}px`;
 
-    context = canvas.getContext('2d') as CanvasRenderingContext2D;
+    context = canvas.getContext('2d');
   }, [])
+
   function loadFrame(){
-    const image = new Image()
+    const image = new Image();
     //src teste, apagar depois
     image.src = process.env.REACT_APP_IMAGE as string;
     image.onload = function(){
-      const ctx = context as CanvasRenderingContext2D
-      ctx.clearRect(0,0,400,400);
-
+      const ctx = context as CanvasRenderingContext2D;
+      clearStage(ctx);
       const centerPosition = GetCenterPositionAxis(image);
       ctx.drawImage(image, centerPosition.x , centerPosition.y);
     }
   }
 
+  function clearStage(context: CanvasRenderingContext2D){
+    const width = canvasRef.current?.width as number;
+    const height = canvasRef.current?.height as number;
+    context.clearRect(0,0,width,height);
+  }
+
   function GetCenterPositionAxis(image: HTMLImageElement): position {
     const width = canvasRef.current?.width as number;
-    const height = canvasRef.current?.width as number;
+    const height = canvasRef.current?.height as number;
     return {
       x: width/2 - image.width/2,
       y: height/2 - image.height/2,
