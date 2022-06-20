@@ -1,0 +1,35 @@
+.more {
+  border: dashed 1px #ddd;
+  padding: 40px 80px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.other-option {
+  display: flex;
+  justify-content: end;
+  margin-top: 5px;
+}
+
+.btn {
+  transition: all .4s;
+  background-color: #fcbf49;
+  border: none;
+  margin-left: 10px;
+  padding: 3px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #f77f00;
+}
+
+.drag-active {
+  border: solid 1px #219ebc;
+  border-radius: 5px;
+}
+
+#input-file-upload {
+  display: none;
+}
