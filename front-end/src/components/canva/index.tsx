@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-type position = {
+type Position = {
   x: number;
   y: number
 }
@@ -40,7 +40,7 @@ const App: React.FC = () => {
     context.clearRect(0,0,width,height);
   }
 
-  function GetCenterPositionAxis(image: HTMLImageElement): position {
+  function GetCenterPositionAxis(image: HTMLImageElement): Position {
     const width = canvasRef.current?.width as number;
     const height = canvasRef.current?.height as number;
     return {
