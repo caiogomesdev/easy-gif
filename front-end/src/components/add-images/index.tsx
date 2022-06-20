@@ -7,9 +7,9 @@ const App: React.FC = () => {
   function handleDrag(event: React.FormEvent<HTMLElement>){
     event.preventDefault();
     event.stopPropagation();
-    if (event.type === "dragenter" || event.type === "dragover") {
+    if (event.type === 'dragenter' || event.type === 'dragover') {
       setDragActive(true);
-    } else if (event.type === "dragleave") {
+    } else if (event.type === 'dragleave') {
       setDragActive(false);
     }
   }
