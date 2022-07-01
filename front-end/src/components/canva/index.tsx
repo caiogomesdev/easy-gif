@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 type Position = {
   x: number;
@@ -7,7 +7,7 @@ type Position = {
 
 const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  let context: CanvasRenderingContext2D | null = null;
+  const [ context, setContext ] = useState<CanvasRenderingContext2D | null>(null);
 
   useEffect(()=> {
     const canvas = canvasRef.current as HTMLCanvasElement;
@@ -19,7 +19,7 @@ const App: React.FC = () => {
     canvas.style.height = `${height}px`;
     canvas.style.backgroundColor = `white`;
 
-    context = canvas.getContext('2d');
+    setContext(canvas.getContext('2d'));
   }, [])
 
   function loadFrame(){
