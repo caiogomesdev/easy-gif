@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addImage } from '../../store/image-store';
 import './styles.css';
 
 const App: React.FC = () => {
-  const [dragActive, setDragActive] = useState(false);
+  const dispatch = useDispatch();
+  const [ dragActive, setDragActive ] = useState(false);
 
   function handleDrag(event: React.FormEvent<HTMLElement>){
     event.preventDefault();
@@ -46,7 +49,7 @@ const App: React.FC = () => {
     var reader = new FileReader();
     reader.onloadend = function(event: ProgressEvent<FileReader>){
       const url = event.target?.result
-        console.log(url);
+      dispatch(addImage(url as string))
     };
     reader.readAsDataURL(file);
   }
