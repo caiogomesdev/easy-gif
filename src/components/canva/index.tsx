@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { rootState } from '../../store';
-import './styles.css';
+import { Container, IconBtn } from './style';
 
 type Position = {
   x: number;
@@ -60,16 +60,17 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <div className="icon-container" ref={bannerRef}>
+      <Container ref={bannerRef}>
       {images.data.map((item, index) =>
-        <button className="icon"
-        key={index}
+        <IconBtn key={index}
         onClick={() => loadFrame(index)}>
           <img src={item} alt={`${index}`} />
-        </button>)
+        </IconBtn>)
         }
-      </div>
-      <canvas ref={canvasRef} className={images.data.length ? '' : 'display-none'}></canvas>
+      </Container>
+      <canvas ref={canvasRef}
+      style={{ display: `${images.data.length ? '' : 'none'}` }}>
+      </canvas>
     </div>
   )
 }
