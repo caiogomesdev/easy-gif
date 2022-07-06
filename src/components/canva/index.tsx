@@ -57,10 +57,18 @@ const App: React.FC = () => {
       y: height/2 - image.height/2,
     }
   }
+  function handleWheel(event: React.WheelEvent<HTMLDivElement>){
+    const velocity = 2;
+    const direction = event.deltaY;
+    bannerRef.current?.scrollTo({
+      left: bannerRef.current?.scrollLeft + direction * velocity,
+      behavior: 'smooth'
+    })
+  }
 
   return (
     <div>
-      <Container ref={bannerRef}>
+      <Container ref={bannerRef} onWheel={handleWheel}>
       {images.data.map((item, index) =>
         <IconBtn key={index}
         onClick={() => loadFrame(index)}>
