@@ -10,8 +10,14 @@ type Position = {
 
 const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
   const [ context, setContext ] = useState<CanvasRenderingContext2D | null>(null);
   const images = useSelector((state: rootState ) => state.image);
+
+  useEffect(() => {
+    const x = bannerRef.current?.scrollWidth as number;
+    bannerRef.current?.scrollTo(x, 0)
+  }, [images]);
 
   useEffect(()=> {
     const canvas = canvasRef.current as HTMLCanvasElement;
@@ -54,7 +60,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <div className="icon-container">
+      <div className="icon-container" ref={bannerRef}>
       {images.data.map((item, index) =>
         <button className="icon"
         key={index}
