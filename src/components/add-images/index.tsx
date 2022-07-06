@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addImage } from '../../store/image-store';
-import './styles.css';
+import{ OtherOptions, Button, More } from './style';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -74,21 +74,25 @@ const App: React.FC = () => {
   return (
     <div className='containerCanva'>
       <form id="form-file-upload">
-        <input type="file" id="input-file-upload" multiple={false} onChange={handleChange} />
+        <input type="file"
+        id="input-file-upload"
+        style={{ display: 'none' }}
+        multiple={ false }
+        onChange={ handleChange } />
           <label id="label-file-upload" htmlFor="input-file-upload">
-            <h1 className={`${dragActive ? 'drag-active': ''} more`}
-            onDrop={handleDrop}
-            onDragEnter={handleDrag}
-            onDragOver={handleDrag}
-            onDragLeave={handleDrag}
-            > {dragActive ? 'Drop' : '+'}</h1>
+            <More dragActive={dragActive}
+            onDrop={ handleDrop }
+            onDragEnter={ handleDrag }
+            onDragOver={ handleDrag }
+            onDragLeave={ handleDrag }
+            > { dragActive ? 'Drop' : '+' } </More>
           </label>
       </form>
 
-      <div className='other-option'>
+      <OtherOptions>
         <small>or</small>
-        <button className='btn' onClick={handleClick}>Paste clipboard</button>
-      </div>
+        <Button onClick={handleClick}>Paste clipboard</Button>
+      </OtherOptions>
     </div>
   )
 }
