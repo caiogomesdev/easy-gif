@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addImage } from '../../store/image-store';
+import { addFrame } from '../../store/image-store';
+import { Frame } from '../contracts';
 import{ OtherOptions, Button, More } from './style';
 
 const App: React.FC = () => {
@@ -49,8 +50,9 @@ const App: React.FC = () => {
     var reader = new FileReader();
     reader.onloadend = function(event: ProgressEvent<FileReader>){
       const url = event.target?.result
-      dispatch(addImage(url as string))
-    };
+      const frame = { image: url as string, posX: 0, posY: 0, scale: 0.5} as Frame;
+      dispatch(addFrame(frame))
+      };
     reader.readAsDataURL(file);
   }
 

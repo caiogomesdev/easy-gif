@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { rootState } from '../../store';
-import { Container, IconBtn } from './style';
+import { Container, IconBtn, ButtonDelete } from './style';
+import { removeFrame } from '../../store/image-store';
+
 
 type Position = {
   x: number;
@@ -12,11 +14,16 @@ const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [ context, setContext ] = useState<CanvasRenderingContext2D | null>(null);
+  const [ currentFrame, setCurrentFrame ] = useState(0);
   const images = useSelector((state: rootState ) => state.image);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const x = bannerRef.current?.scrollWidth as number;
     bannerRef.current?.scrollTo(x, 0)
+
+    const index = images.currentIndex;
+    loadFrame(index);
   }, [images]);
 
   useEffect(()=> {
@@ -34,13 +41,17 @@ const App: React.FC = () => {
 
   function loadFrame(index: number){
     const image = new Image();
-    image.src = images.data[index];
+    image.src = images.data[index]?.image;
     image.onload = function(){
       const ctx = context as CanvasRenderingContext2D;
       clearStage(ctx);
-      const centerPosition = getCenterPositionAxis(image);
-      ctx.drawImage(image, centerPosition.x , centerPosition.y);
+      const scale = images.data[index]?.scale;
+      const width = image.width * scale;
+      const height = image.height * scale;
+      const centerPosition = getCenterPositionAxis(image, scale);
+      ctx.drawImage(image, centerPosition.x , centerPosition.y, width, height);
     }
+    setCurrentFrame(index);
   }
 
   function clearStage(context: CanvasRenderingContext2D){
@@ -49,14 +60,15 @@ const App: React.FC = () => {
     context.clearRect(0,0,width,height);
   }
 
-  function getCenterPositionAxis(image: HTMLImageElement): Position {
+  function getCenterPositionAxis(image: HTMLImageElement, scale: number): Position {
     const width = canvasRef.current?.width as number;
     const height = canvasRef.current?.height as number;
     return {
-      x: width/2 - image.width/2,
-      y: height/2 - image.height/2,
+      x: width/2 - (image.width * scale)/2,
+      y: height/2 - (image.height * scale)/2,
     }
   }
+
   function handleWheel(event: React.WheelEvent<HTMLDivElement>){
     const velocity = 2;
     const direction = event.deltaY;
@@ -66,16 +78,27 @@ const App: React.FC = () => {
     })
   }
 
+  function deleteFrame(){
+    dispatch(removeFrame(currentFrame));
+  }
+
   return (
-    <div>
+    <div style={{position: 'relative'}}>
       <Container ref={bannerRef} onWheel={handleWheel}>
       {images.data.map((item, index) =>
         <IconBtn key={index}
-        onClick={() => loadFrame(index)}>
-          <img src={item} alt={`${index}`} />
+        onClick={() => loadFrame(index)}
+        frameActual={currentFrame === index}
+        >
+          <img src={item.image} alt={`${index}`} />
         </IconBtn>)
         }
-      </Container>
+      </Container >
+      <ButtonDelete
+      onClick={() => deleteFrame()}
+      style={
+        { display: `${images.data.length ? '' : 'none'}` }}>
+      X</ButtonDelete>
       <canvas ref={canvasRef}
       style={{ display: `${images.data.length ? '' : 'none'}` }}>
       </canvas>
