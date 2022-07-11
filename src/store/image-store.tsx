@@ -7,6 +7,7 @@ const store = createSlice({
     data: [] as Frame[],
     currentIndex: 0,
     length: 0,
+    interval: 1000
   },
   reducers: {
     addFrame(state: IState, context: PayloadAction<Frame>){
@@ -33,8 +34,13 @@ const store = createSlice({
     changeScale(state: IState, context: PayloadAction<ChangeScale>){
       const { index, value} = context.payload;
       state.currentIndex = index;
-      console.log(context.payload)
       state.data[index].scale = value;
+    },
+    changeCurrentFrame(state: IState, context: PayloadAction<number>){
+      state.currentIndex = context.payload;
+    },
+    changeInterval(state: IState, context: PayloadAction<number>){
+      state.interval = context.payload;
     }
   },
 })
@@ -43,11 +49,19 @@ type ChangeScale = {
   index: number;
   value: number;
 }
-type IState = {
+export type IState = {
   data: Frame[],
   currentIndex: number,
   length: number,
+  interval: number
 }
 
-export const { addFrame, changeFrame, removeFrame, changeScale } = store.actions;
+export const {
+  addFrame,
+  changeFrame,
+  removeFrame,
+  changeScale,
+  changeCurrentFrame,
+  changeInterval
+ } = store.actions;
 export default store.reducer;
