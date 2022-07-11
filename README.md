@@ -5,10 +5,8 @@
 
 </div>
 
-
-
 # Easy Gif
-Crie seus gifs de maneira muito simples com essa aplicação web código aberto. <br />
+Crie seus gifs de maneira muito simples com essa aplicação web. Em poucos segundos você tem um gif pronto para uso. <br />
 [Link da aplicação](http://easygif.caiogomesdev.link)
 ## Get started
 ```
@@ -16,7 +14,7 @@ Crie seus gifs de maneira muito simples com essa aplicação web código aberto.
 $ npm install
 
 # Para desenvolvimento:
-$ npm run serve
+$ npm start
 
 # Para produção:
 $ npm run build
