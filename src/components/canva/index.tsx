@@ -1,9 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { rootState } from '../../store';
-import { Container, IconBtn, ButtonDelete, Canvas } from './style';
-import { removeFrame, changeScale } from '../../store/image-store';
+import { Container, IconBtn, ButtonDelete } from './style';
+import { changeCurrentFrame, removeFrame } from '../../store/image-store';
 import { size } from '../../utils';
+import OptionsTop from '../options/top';
+import OptionsDown from '../options/down';
 
 type Position = {
   x: number;
@@ -14,8 +16,8 @@ const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [ context, setContext ] = useState<CanvasRenderingContext2D | null>(null);
-  const [ currentFrame, setCurrentFrame ] = useState(0);
   const images = useSelector((state: rootState ) => state.image);
+  const resolution = useSelector((state: rootState ) => state.resolution);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,14 +28,26 @@ const App: React.FC = () => {
     loadFrame(index);
   }, [images]);
 
+  useEffect(() => {
+    changeCanvasResolution();
+  }, [resolution])
+
   useEffect(()=> {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    canvas.width = size.width;
-    canvas.height = size.height;
     canvas.style.backgroundColor = `white`;
-
     setContext(canvas.getContext('2d'));
   }, []);
+
+  function changeCanvasResolution(){
+    const canvas = canvasRef.current as HTMLCanvasElement;
+    const width = resolution.width;
+    const height = resolution.height;
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = `${size.widthDefault}px`;
+    canvas.style.height = `${size.widthDefault * (height/width)}px`;
+    loadFrame(images.currentIndex);
+  }
 
   function loadFrame(index: number){
     const image = new Image();
@@ -47,8 +61,7 @@ const App: React.FC = () => {
       const centerPosition = getCenterPositionAxis(image, scale);
       ctx.drawImage(image, centerPosition.x , centerPosition.y, width, height);
     }
-    console.log(index)
-    setCurrentFrame(index);
+    dispatch(changeCurrentFrame(index))
   }
 
   function clearStage(context: CanvasRenderingContext2D){
@@ -59,8 +72,8 @@ const App: React.FC = () => {
 
   function getCenterPositionAxis(image: HTMLImageElement, scale: number): Position {
     return {
-      x: size.width/2 - (image.width * scale)/2,
-      y: size.height/2 - (image.height * scale)/2,
+      x: resolution.width/2 - (image.width * scale)/2,
+      y: resolution.height/2 - (image.height * scale)/2,
     }
   }
 
@@ -74,7 +87,7 @@ const App: React.FC = () => {
   }
 
   function deleteFrame(){
-    dispatch(removeFrame(currentFrame));
+    dispatch(removeFrame(images.currentIndex));
   }
 
   return (
@@ -83,7 +96,7 @@ const App: React.FC = () => {
       {images.data.map((item, index) =>
         <IconBtn key={index}
         onClick={() => loadFrame(index)}
-        frameActual={currentFrame === index}
+        frameActual={images.currentIndex === index}
         >
           <img src={item.image} alt={`${index}`} />
         </IconBtn>)
@@ -93,24 +106,12 @@ const App: React.FC = () => {
       style={
         { display: `${images.data.length ? '' : 'none'}` }}>
 
-<ButtonDelete
-      onClick={() => deleteFrame()}>X</ButtonDelete>
-      <Canvas ref={canvasRef}></Canvas>
-      <br />
-      <input
-      type="range"
-      style={
-        { width: '100%' }}
-      value={images?.data[currentFrame]?.scale}
-      max={5}
-      step="0.0001"
-      onChange={(ev) =>
-        dispatch(changeScale(
-        {
-          index: currentFrame,
-          value: +ev.target.value
-        }
-        ))}/>
+      <div style={{padding: '8px 0'}}>
+        <OptionsTop images={images} currentFrame={images.currentIndex}/>
+      </div>
+      <ButtonDelete onClick={() => deleteFrame()}>X</ButtonDelete>
+      <canvas ref={canvasRef}></canvas>
+      <OptionsDown />
       </div>
 
     </div>
