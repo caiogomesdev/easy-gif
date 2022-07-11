@@ -50,7 +50,7 @@ const App: React.FC = () => {
     var reader = new FileReader();
     reader.onloadend = function(event: ProgressEvent<FileReader>){
       const url = event.target?.result
-      const frame = { image: url as string, posX: 0, posY: 0, scale: 0.5} as Frame;
+      const frame = { image: url as string, posX: 0, posY: 0, scale: 1} as Frame;
       dispatch(addFrame(frame))
       };
     reader.readAsDataURL(file);
