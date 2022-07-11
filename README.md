@@ -7,7 +7,7 @@
 
 
 
-# filmaria
+# Easy Gif
 Crie seus gifs de maneira muito simples com essa aplicação web código aberto. <br />
 [Link da aplicação](http://easygif.caiogomesdev.link)
 ## Get started
