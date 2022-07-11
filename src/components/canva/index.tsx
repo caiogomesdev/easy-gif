@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { rootState } from '../../store';
-import { Container, IconBtn, ButtonDelete } from './style';
-import { removeFrame } from '../../store/image-store';
-
+import { Container, IconBtn, ButtonDelete, Canvas } from './style';
+import { removeFrame, changeScale } from '../../store/image-store';
+import { size } from '../../utils';
 
 type Position = {
   x: number;
@@ -28,12 +28,8 @@ const App: React.FC = () => {
 
   useEffect(()=> {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const width = 600;
-    const height = 400;
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.width = size.width;
+    canvas.height = size.height;
     canvas.style.backgroundColor = `white`;
 
     setContext(canvas.getContext('2d'));
@@ -51,6 +47,7 @@ const App: React.FC = () => {
       const centerPosition = getCenterPositionAxis(image, scale);
       ctx.drawImage(image, centerPosition.x , centerPosition.y, width, height);
     }
+    console.log(index)
     setCurrentFrame(index);
   }
 
@@ -61,11 +58,9 @@ const App: React.FC = () => {
   }
 
   function getCenterPositionAxis(image: HTMLImageElement, scale: number): Position {
-    const width = canvasRef.current?.width as number;
-    const height = canvasRef.current?.height as number;
     return {
-      x: width/2 - (image.width * scale)/2,
-      y: height/2 - (image.height * scale)/2,
+      x: size.width/2 - (image.width * scale)/2,
+      y: size.height/2 - (image.height * scale)/2,
     }
   }
 
@@ -94,14 +89,30 @@ const App: React.FC = () => {
         </IconBtn>)
         }
       </Container >
-      <ButtonDelete
-      onClick={() => deleteFrame()}
+      <div
       style={
         { display: `${images.data.length ? '' : 'none'}` }}>
-      X</ButtonDelete>
-      <canvas ref={canvasRef}
-      style={{ display: `${images.data.length ? '' : 'none'}` }}>
-      </canvas>
+
+<ButtonDelete
+      onClick={() => deleteFrame()}>X</ButtonDelete>
+      <Canvas ref={canvasRef}></Canvas>
+      <br />
+      <input
+      type="range"
+      style={
+        { width: '100%' }}
+      value={images?.data[currentFrame]?.scale}
+      max={5}
+      step="0.0001"
+      onChange={(ev) =>
+        dispatch(changeScale(
+        {
+          index: currentFrame,
+          value: +ev.target.value
+        }
+        ))}/>
+      </div>
+
     </div>
   )
 }

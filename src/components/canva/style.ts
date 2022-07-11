@@ -1,11 +1,17 @@
 import styled from 'styled-components';
+import { size } from '../../utils';
 
 interface IIConBtn {
   frameActual: boolean;
 }
 
+export const Canvas = styled.canvas`
+  width: ${size.widthDefault}px;
+  height: ${size.widthDefault * (size.height/size.width)}px;
+`
+
 export const Container = styled.div`
-  width: 600px;
+  width: ${size.widthDefault}px;
   display: flex;
   overflow-y: hidden;
 
