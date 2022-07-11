@@ -1,10 +1,15 @@
+<div align="center">
 
-![meugif (1)](https://user-images.githubusercontent.com/66751642/178317910-83caad21-c5d7-4e02-80a3-6f9ef1563de8.gif)  
+![meugif (7)](https://user-images.githubusercontent.com/66751642/178319151-4ae0b16c-9c43-48cd-a345-ca7216a1ef57.gif)
+
+
+</div>
+
 
 
 # filmaria
-Projeto prático do curso de vue do Sujeito Programador. Contém rotas, componentização e requisições HTTP. <br />
-[Link da aplicação](http://filmaria.caiogomesdev.link)
+Crie seus gifs de maneira muito simples com essa aplicação web código aberto. <br />
+[Link da aplicação](http://easygif.caiogomesdev.link)
 ## Get started
 ```
 # Instale todas as dependências:
@@ -17,9 +22,10 @@ $ npm run serve
 $ npm run build
 ```
 ## Tecnologias
+* react
+* redux
+* styled-components
+* typescript
+* javascript
 * html
 * css
-* javascript
-* vue
-* vue-router
-* axios
