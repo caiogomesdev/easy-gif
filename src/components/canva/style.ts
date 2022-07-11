@@ -5,11 +5,6 @@ interface IIConBtn {
   frameActual: boolean;
 }
 
-export const Canvas = styled.canvas`
-  width: ${size.widthDefault}px;
-  height: ${size.widthDefault * (size.height/size.width)}px;
-`
-
 export const Container = styled.div`
   width: ${size.widthDefault}px;
   display: flex;
@@ -61,7 +56,7 @@ export const ButtonDelete = styled.button`
   cursor: pointer;
   transition: ease-in-out .2s;
   background-color: #fe938c;
-  border-radius: 0 0 20% 20%;
+  border-radius: 20%;
   color: #fff;
   &:hover {
     background-color: #f38375;
