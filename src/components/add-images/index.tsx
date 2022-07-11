@@ -19,7 +19,6 @@ const App: React.FC = () => {
   }
 
   function handleDrop(event: React.DragEvent<HTMLHeadingElement>){
-    console.log('drop')
     getUrlImage(event.dataTransfer as DataTransfer);
     event.preventDefault();
     event.stopPropagation();
