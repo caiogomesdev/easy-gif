@@ -3,6 +3,7 @@ import gifEncoder,{ GifEncoder } from 'gif-encoder-2';
 import { createCanvas } from 'canvas';
 
 import { Frame } from '../components/contracts';
+import { getCenterPositionAxis } from '../utils';
 
 export class EncodingService {
   gitEncoder: GifEncoder | null = null
@@ -11,7 +12,6 @@ export class EncodingService {
   width = 0
   height = 0
   constructor({ width, height, frames, interval}: EncodingService.Params){
-
     this.gitEncoder = new gifEncoder(width, height);
     this.frames = frames;
     this.interval = interval;
@@ -19,7 +19,6 @@ export class EncodingService {
     this.gitEncoder.start();
     this.width = width;
     this.height = height;
-
   }
   async init(){
     await this.setFrames()
@@ -33,16 +32,29 @@ export class EncodingService {
         image.src = frame.image;
         image.onload = () => {
           context.clearRect(0,0,this.width,this.height)
+          context.fillStyle = '#fff';
+          context.fillRect(0,0,this.width,this.height );
+
           const widthImage = image.width * frame.scale;
           const heightImage = image.height * frame.scale;
-          context.drawImage(image, 0, 0, widthImage, heightImage)
+
+          const centerPosition = getCenterPositionAxis(
+            {
+              width: image.width,
+              height: image.height
+            },
+            {
+              width: this.width,
+              height: this.height
+            }, frame.scale);
+
+          context.drawImage(image, centerPosition.x, centerPosition.y, widthImage, heightImage)
           resolve(this.gitEncoder?.addFrame(context))
       }})
       }
     }
   finish(): Buffer {
     this.gitEncoder?.finish();
-
     return (this.gitEncoder as GifEncoder).out.getData();
   }
 }

@@ -3,14 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { rootState } from '../../store';
 import { Container, IconBtn, ButtonDelete } from './style';
 import { changeCurrentFrame, removeFrame } from '../../store/image-store';
-import { size } from '../../utils';
+import { getCenterPositionAxis, size } from '../../utils';
 import OptionsTop from '../options/top';
 import OptionsDown from '../options/down';
-
-type Position = {
-  x: number;
-  y: number
-}
 
 const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,7 +53,15 @@ const App: React.FC = () => {
       const scale = images.data[index]?.scale;
       const width = image.width * scale;
       const height = image.height * scale;
-      const centerPosition = getCenterPositionAxis(image, scale);
+      const centerPosition = getCenterPositionAxis(
+        {
+          width: image.width,
+          height: image.height
+        },
+        {
+          width: resolution.width,
+          height: resolution.height
+        }, scale);
       ctx.drawImage(image, centerPosition.x , centerPosition.y, width, height);
     }
     dispatch(changeCurrentFrame(index))
@@ -68,13 +71,6 @@ const App: React.FC = () => {
     const width = canvasRef.current?.width as number;
     const height = canvasRef.current?.height as number;
     context.clearRect(0,0,width,height);
-  }
-
-  function getCenterPositionAxis(image: HTMLImageElement, scale: number): Position {
-    return {
-      x: resolution.width/2 - (image.width * scale)/2,
-      y: resolution.height/2 - (image.height * scale)/2,
-    }
   }
 
   function handleWheel(event: React.WheelEvent<HTMLDivElement>){
