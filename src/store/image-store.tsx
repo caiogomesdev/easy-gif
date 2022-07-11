@@ -29,15 +29,25 @@ const store = createSlice({
         currentIndex = index;
       }
       state.currentIndex = currentIndex;
+    },
+    changeScale(state: IState, context: PayloadAction<ChangeScale>){
+      const { index, value} = context.payload;
+      state.currentIndex = index;
+      console.log(context.payload)
+      state.data[index].scale = value;
     }
   },
 })
 
+type ChangeScale = {
+  index: number;
+  value: number;
+}
 type IState = {
   data: Frame[],
   currentIndex: number,
   length: number,
 }
 
-export const { addFrame, changeFrame, removeFrame } = store.actions;
+export const { addFrame, changeFrame, removeFrame, changeScale } = store.actions;
 export default store.reducer;
