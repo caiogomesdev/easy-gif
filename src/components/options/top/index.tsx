@@ -22,14 +22,14 @@ const App: React.FC<Props> = ({images, currentFrame}) => {
           Scale:
         <Range
           type="range"
-          value={images?.data[currentFrame]?.scale}
+          value={images?.data[currentFrame]?.scale || 0}
           max={5}
           step="0.01"
           onChange={(ev) =>
             dispatch(changeScale({index: currentFrame, value: +ev.target.value}))
             }/>
         <input type="number"
-          value={images?.data[currentFrame]?.scale}
+          value={images?.data[currentFrame]?.scale || 0}
           step="0.1"
           onChange={(ev)=> dispatch(changeScale({index: currentFrame, value: +ev.target.value}))}
           />

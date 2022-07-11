@@ -1,11 +1,57 @@
 
-import { GifEncoder} from 'gif-encoder-2';
+import gifEncoder,{ GifEncoder } from 'gif-encoder-2';
+import { createCanvas } from 'canvas';
 
-export class Encoding {
-  constructor(private gitEncoder: GifEncoder){
+import { Frame } from '../components/contracts';
+
+export class EncodingService {
+  gitEncoder: GifEncoder | null = null
+  frames: Frame[] = []
+  interval = 1000
+  width = 0
+  height = 0
+  constructor({ width, height, frames, interval}: EncodingService.Params){
+
+    this.gitEncoder = new gifEncoder(width, height);
+    this.frames = frames;
+    this.interval = interval;
+    this.gitEncoder.setDelay(interval);
     this.gitEncoder.start();
+    this.width = width;
+    this.height = height;
+
   }
+  async init(){
+    await this.setFrames()
+  }
+  async setFrames(){
+    const canvas = createCanvas(this.width,this.height);
+    const context = canvas.getContext('2d')
+    for(const frame of this.frames){
+      await new Promise(resolve => {
+        const image = new Image();
+        image.src = frame.image;
+        image.onload = () => {
+          context.clearRect(0,0,this.width,this.height)
+          const widthImage = image.width * frame.scale;
+          const heightImage = image.height * frame.scale;
+          context.drawImage(image, 0, 0, widthImage, heightImage)
+          resolve(this.gitEncoder?.addFrame(context))
+      }})
+      }
+    }
   finish(): Buffer {
-    return this.gitEncoder.out.getData();
+    this.gitEncoder?.finish();
+
+    return (this.gitEncoder as GifEncoder).out.getData();
+  }
+}
+
+export namespace EncodingService{
+  export type Params = {
+    frames: Frame[],
+    interval: number,
+    width: number,
+    height: number,
   }
 }

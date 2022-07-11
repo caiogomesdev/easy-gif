@@ -1,5 +1,7 @@
+import { writeFile } from 'fs/promises';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { EncodingService } from '../../../services/encoding.service';
 import { rootState } from '../../../store';
 import { changeCurrentFrame } from '../../../store/image-store';
 import { Container, Content, Row } from '../styles';
@@ -8,6 +10,7 @@ import { Button } from './styles';
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const images = useSelector((state: rootState ) => state.image);
+  const resolution = useSelector((state: rootState ) => state.resolution);
   const [ isPlay, setPlay ] = useState(false);
   const [ running, setRunning ] = useState(-1);
 
@@ -18,6 +21,32 @@ const App: React.FC = () => {
       setRunning(-1);
     }
     setPlay(!isPlay);
+  }
+
+  async function download(){
+    const params = {
+      width: resolution.width,
+      height: resolution.height,
+      interval: images.interval,
+      frames: images.data,
+      }
+    const encodingService = new EncodingService(params);
+    await encodingService.init()
+    const buffer = encodingService.finish()
+
+    const base64String = Buffer.from(buffer.buffer).toString('base64');
+    const url = `data:image/gif;base64,${base64String}`;
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute(
+      'download',
+      `meugif.gif`,
+    );
+    document.body.appendChild(link);
+    link.click();
+
+    dispatch(changeCurrentFrame(images.length - 1))
   }
 
   useEffect(() => {
@@ -34,12 +63,11 @@ const App: React.FC = () => {
   return (
     <Container>
       <Row>
-
           <h3>
           frame {images.currentIndex + 1} of {images.length}
           </h3>
         <Content>
-        <Button>
+        <Button onClick={download}>
           <i className="bi bi-cloud-arrow-down-fill"></i>
 
         </Button>
