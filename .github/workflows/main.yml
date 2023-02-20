@@ -33,6 +33,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/easy-gif:${{ steps.tag_version.outputs.new_version }}
