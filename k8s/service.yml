@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: easy-gif-service
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: http-svc
+      port: 80
+  selector:
+    app: easy-gif

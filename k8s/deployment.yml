@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easy-gif
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: easy-gif
+  template:
+    metadata:
+      labels:
+        app: easy-gif
+    spec:
+      containers:
+        - name: easy-gif
+          image: caiogomesdev/easy-gif:latest
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: dockerreg
